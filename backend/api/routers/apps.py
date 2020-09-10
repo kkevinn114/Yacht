@@ -61,7 +61,7 @@ async def ws(websocket: WebSocket, app_name: str):
         await websocket.accept()
         async with aiodocker.Docker() as docker:
             container: DockerContainer = await docker.containers.get(app_name)
-            logs = container.log(stdout=True, stderr=True, follow=True)
+            logs = container.log(stdout=True, stderr=True, follow=True, tail=500)
             async for line in logs:
                 await websocket.send_text(line)
     else:

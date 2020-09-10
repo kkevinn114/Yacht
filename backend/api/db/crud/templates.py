@@ -8,6 +8,9 @@ from ...utils import conv_ports2dict, conv_sysctls2dict
 from datetime import datetime
 import urllib.request
 import json
+import wget
+import os
+from urllib.parse import urlparse
 
 ### Templates
 def get_templates(db: Session):
@@ -160,3 +163,46 @@ def set_template_variables(db: Session, new_variables: models.TemplateVariables)
 
 def read_template_variables(db: Session):
     return db.query(models.TemplateVariables).all()
+
+def add_compose(db: Session, compose: models.containers.Compose):
+    try:
+    # Opens the JSON and iterate over the content.
+        _compose = models.containers.Compose(title = compose.title, url = compose.url)
+ 
+        compose_name = compose.name
+        compose_url = compose.url
+        compose_description = compose.description
+
+        compose_path = urlparse(compose_url).path
+        ext = os.path.splitext(compose_path)[1]
+
+        if ext in ('.yml', 'yaml'):
+            compose_path = wget.download(compose_url, out='/config/compose')
+        else:
+            print('Not a valid extension: ' + ext)
+
+        _compose = models.containers.Compose(
+            name = compose_name,
+            description = compose_description,
+            url = compose_url,
+            path = compose_path
+        )
+        
+    except (OSError, TypeError, ValueError) as err:
+        # Optional handle KeyError here too.
+        print('data request failed', err)
+        raise
+
+    try:
+        db.add(_compose)
+        db.commit()
+    except IntegrityError as err:
+        # TODO raises IntegrityError on duplicates (uniqueness)
+        #       status
+        db.rollback()
+        pass
+
+    return get_compose(db=db, url=compose.url)
+
+def get_compose(db: Session, url: str):
+    return db.query(models.Compose).filter(models.Compose.url == url).first()

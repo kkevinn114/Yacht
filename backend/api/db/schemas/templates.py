@@ -60,3 +60,14 @@ class Import_Export(BaseModel):
 
 
 TemplateItems.update_forward_refs()
+
+class Compose(BaseModel):
+    name: str
+    description: Optional[str]
+    url: Optional[str]
+    
+    class Config:
+        orm_mode = True
+
+class ReadCompose(Compose):
+    path: str

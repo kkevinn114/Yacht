@@ -70,3 +70,11 @@ class TemplateVariables(Base):
         nullable=False, unique=True, index=True)
     replacement = Column(String(255),
         nullable=False, unique=True, index=True)
+
+class Compose(Base):
+    __tablename__ = 'compose_templates'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), index=True, unique=True)
+    description = Column(String(256))
+    url = Column(String(256), nullable=True)
+    path = Column(String(256), unique=True)
