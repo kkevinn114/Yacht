@@ -167,7 +167,7 @@ def read_template_variables(db: Session):
 def add_compose(db: Session, compose: models.containers.Compose):
     try:
     # Opens the JSON and iterate over the content.
-        _compose = models.containers.Compose(title = compose.title, url = compose.url)
+        _compose = models.containers.Compose(name = compose.name, url = compose.url)
  
         compose_name = compose.name
         compose_url = compose.url
@@ -176,10 +176,15 @@ def add_compose(db: Session, compose: models.containers.Compose):
         compose_path = urlparse(compose_url).path
         ext = os.path.splitext(compose_path)[1]
 
+        if os.path.exists('/config/'+compose_name+"."+ext):
+            print('file exists, overwritting')
+            os.remove('/config/'+compose_name+"."+ext)
+
         if ext in ('.yml', 'yaml'):
-            compose_path = wget.download(compose_url, out='/config/compose')
+            compose_path = wget.download(compose_url, out='/config/'+compose_name+"."+ext)
         else:
             print('Not a valid extension: ' + ext)
+            raise
 
         _compose = models.containers.Compose(
             name = compose_name,

@@ -88,6 +88,11 @@ export default {
         icon: "mdi-cog",
         text: "Settings"
       },
+      {
+        to: "/compose/edit",
+        icon: "mdi-book-open-outline",
+        text: "Compose"
+      }
     ],
   }),
 };

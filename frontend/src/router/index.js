@@ -19,6 +19,8 @@ import UserInfo from "../components/userSettings/UserInfo.vue"
 import ServerSettings from "../views/ServerSettings.vue";
 import ServerInfo from "../components/serverSettings/ServerInfo.vue"
 import ServerVariables from "../components/serverSettings/ServerVariables.vue"
+import Compose from "../views/Compose.vue";
+import ComposeEditor from "../components/compose/ComposeEditor.vue";
 
 Vue.use(VueRouter);
 
@@ -91,6 +93,17 @@ const routes = [
         ],
       },
     ],
+  },
+  {
+    path: "/compose",
+    component: Compose,
+    children: [
+      {
+        name: "Compose Editor",
+        path: "edit",
+        component: ComposeEditor,
+      }
+    ]
   },
   {
     path: "/user",

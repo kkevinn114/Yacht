@@ -46,7 +46,7 @@ def refresh_template(id: int, db: Session = Depends(get_db)):
 def read_app_template(id: int, db: Session = Depends(get_db)):
     return crud.read_app_template(db=db, app_id=id)
 
-@router.post("/compose", response_model=schemas.Compose, dependencies=[Depends(get_active_user)])
+@router.post("/compose", response_model=schemas.ReadCompose)
 def add_compose(compose: schemas.Compose, db: Session = Depends(get_db)):
     existing_compose = crud.get_compose(db=db, url=compose.url)
     if existing_compose:
