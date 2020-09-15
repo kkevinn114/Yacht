@@ -9,10 +9,28 @@
           bottom
         />
       </v-fade-transition> -->
-      <v-card-title>
-        New Compose Template
-      </v-card-title>
       <v-form>
+        <div class="d-flex">
+        <v-row>
+          <v-col class="flex-grow-1 flex-shrink-0">
+        <v-card-title class="mt-1">
+          New Compose Template
+        </v-card-title>
+        </v-col>
+        <v-col class="flex-grow-1 flex-shrink-0">
+        <v-text-field
+          class="mr-3"
+          v-model="name"
+          label="Template Name"
+          required
+        >
+        </v-text-field>
+        </v-col>
+        <v-col class="flex-grow-0 flex-shrink-1">
+          <v-btn color="primary" class="mr-2 mt-3">submit</v-btn>
+        </v-col>
+        </v-row>
+        </div>
         <editor
           v-model="content"
           @init="editorInit"
@@ -32,11 +50,14 @@
 
 export default {
   data() {
-    return{
-      content: null,
-      windowHeight: window.innerHeight - 200,
+    return {
+      form: {
+        name: "",
+        content: null,
+      },
+      windowHeight: window.innerHeight - 205,
       windowWidth: window.innerWidth - 80,
-    }
+    };
   },
   components: {
     editor: require("vue2-ace-editor"),
@@ -46,6 +67,9 @@ export default {
       require("brace/mode/yaml");
       require("brace/theme/twilight");
     },
+    submitCompose() {
+      console.log(this.form);
+    },
   },
 };
 </script>
@@ -54,7 +78,7 @@ export default {
 .ace_gutter {
   z-index: 1;
 }
-.ace_gutter-active-line{
+.ace_gutter-active-line {
   z-index: 1;
 }
 </style>
